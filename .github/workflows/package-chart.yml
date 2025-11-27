@@ -108,6 +108,8 @@ jobs:
             --merge index.yaml \
             --url https://raw.githubusercontent.com/liuyenhui/fhg-charts/main/packages \
             packages
+          ls -l packages
+          cat index.yaml
 
       - name: Commit packaged chart
         env:
