@@ -108,6 +108,7 @@ jobs:
             --merge index.yaml \
             --url https://raw.githubusercontent.com/liuyenhui/fhg-charts/main/packages \
             packages
+          cp packages/index.yaml index.yaml
           ls -l packages
           cat index.yaml
 
