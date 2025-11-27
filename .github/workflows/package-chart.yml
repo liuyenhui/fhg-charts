@@ -102,6 +102,13 @@ jobs:
         env:
           chart_dir: ${{ steps.inputs.outputs.chart_dir }}
 
+      - name: Update Helm repo index
+        run: |
+          helm repo index \
+            --merge index.yaml \
+            --url https://raw.githubusercontent.com/liuyenhui/fhg-charts/main/packages \
+            packages
+
       - name: Commit packaged chart
         env:
           CHART_DIR: ${{ steps.inputs.outputs.chart_dir }}
@@ -112,7 +119,7 @@ jobs:
           package_file="packages/${CHART_NAME}-${CHART_VERSION}.tgz"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add "${CHART_DIR}/Chart.yaml" "${CHART_DIR}/values.yaml" "$package_file"
+          git add "${CHART_DIR}/Chart.yaml" "${CHART_DIR}/values.yaml" "$package_file" index.yaml
           if git diff --cached --quiet; then
             echo "No changes detected; skipping commit."
             exit 0
