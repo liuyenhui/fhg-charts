@@ -1,5 +1,5 @@
 apiVersion: v2
-name: my-backend-chart
+name: fhg-backend-chart
 version: 0.1.0
 appVersion: "0.1.0"
 description: Helm chart for the fhg backend service.

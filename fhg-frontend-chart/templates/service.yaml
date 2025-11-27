@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "my-frontend-chart.fullname" . }}
+  name: {{ include "fhg-frontend-chart.fullname" . }}
 spec:
   selector:
-    app.kubernetes.io/name: {{ include "my-frontend-chart.name" . }}
+    app.kubernetes.io/name: {{ include "fhg-frontend-chart.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
   ports:
     - port: 80
