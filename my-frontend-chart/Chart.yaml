@@ -1,0 +1,6 @@
+apiVersion: v2
+name: my-frontend-chart
+version: 0.1.0
+appVersion: "0.1.0"
+description: Helm chart for the fhg frontend application.
+type: application
