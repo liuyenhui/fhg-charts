@@ -2,8 +2,18 @@ apiVersion: v1
 entries:
   fhg-backend-chart:
   - apiVersion: v2
+    appVersion: 0.0.16
+    created: "2025-11-27T13:28:56.356068221Z"
+    description: Helm chart for the fhg backend service.
+    digest: 71a72c10089cd3590f3876df51185e1ae1b27c9ae6b056ef842ffbece75de4bf
+    name: fhg-backend-chart
+    type: application
+    urls:
+    - https://raw.githubusercontent.com/liuyenhui/fhg-charts/main/packages/fhg-backend-chart-0.1.5.tgz
+    version: 0.1.5
+  - apiVersion: v2
     appVersion: 0.0.15
-    created: "2025-11-27T13:00:47.516484422Z"
+    created: "2025-11-27T13:28:56.35593469Z"
     description: Helm chart for the fhg backend service.
     digest: 574e747a79663b4b57c854117d05028cfac6e8dd4fd9baa78022423b8e1400d0
     name: fhg-backend-chart
@@ -13,7 +23,7 @@ entries:
     version: 0.1.4
   - apiVersion: v2
     appVersion: 0.0.14
-    created: "2025-11-27T13:00:47.516350121Z"
+    created: "2025-11-27T13:28:56.355801651Z"
     description: Helm chart for the fhg backend service.
     digest: ff70f1d808ddd2c8b8aa1c94b776e57a8ccfc48cef46f93c673b860a35d52ed1
     name: fhg-backend-chart
@@ -23,7 +33,7 @@ entries:
     version: 0.1.3
   - apiVersion: v2
     appVersion: 0.0.13
-    created: "2025-11-27T13:00:47.51622639Z"
+    created: "2025-11-27T13:28:56.355677829Z"
     description: Helm chart for the fhg backend service.
     digest: ba2cf9ec34681d52fd9c30e512ec43fe9589d138ed5a889dd2e9cc81d1582173
     name: fhg-backend-chart
@@ -33,7 +43,7 @@ entries:
     version: 0.1.2
   - apiVersion: v2
     appVersion: 0.0.12
-    created: "2025-11-27T13:00:47.516055911Z"
+    created: "2025-11-27T13:28:56.355544328Z"
     description: Helm chart for the fhg backend service.
     digest: 139ab44b8f5fb341b81bf48fc239ec441f031965fc7135da63a46e6cb4a4e068
     name: fhg-backend-chart
@@ -41,4 +51,4 @@ entries:
     urls:
     - https://raw.githubusercontent.com/liuyenhui/fhg-charts/main/packages/fhg-backend-chart-0.1.1.tgz
     version: 0.1.1
-generated: "2025-11-27T13:00:47.515794392Z"
+generated: "2025-11-27T13:28:56.355261558Z"
