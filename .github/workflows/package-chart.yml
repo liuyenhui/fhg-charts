@@ -51,49 +51,49 @@ jobs:
         run: |
           pip install pyyaml
           python - <<'PY'
-import os
-from pathlib import Path
+          import os
+          from pathlib import Path
 
-import yaml
+          import yaml
 
-def bump_version(version: str) -> str:
-    parts = [int(p) for p in version.split(".")]
-    while len(parts) < 3:
-        parts.append(0)
-    major, minor, patch = parts[:3]
-    patch += 1
-    if patch > 99:
-        patch = 0
-        minor += 1
-        if minor > 99:
-            minor = 0
-            major += 1
-    return f"{major}.{minor}.{patch}"
+          def bump_version(version: str) -> str:
+              parts = [int(p) for p in version.split(".")]
+              while len(parts) < 3:
+                  parts.append(0)
+              major, minor, patch = parts[:3]
+              patch += 1
+              if patch > 99:
+                  patch = 0
+                  minor += 1
+                  if minor > 99:
+                      minor = 0
+                      major += 1
+              return f"{major}.{minor}.{patch}"
 
-chart_dir = Path(os.environ["CHART_DIR"])
-chart_file = chart_dir / "Chart.yaml"
-values_file = chart_dir / "values.yaml"
-image_tag = os.environ["IMAGE_TAG"]
-with chart_file.open() as fh:
-    chart_data = yaml.safe_load(fh) or {}
-version = str(chart_data.get("version", "0.0.0"))
-new_version = bump_version(version)
-chart_data["version"] = new_version
-chart_data["appVersion"] = image_tag.lstrip("v")
-with chart_file.open("w") as fh:
-    yaml.safe_dump(chart_data, fh, sort_keys=False)
+          chart_dir = Path(os.environ["CHART_DIR"])
+          chart_file = chart_dir / "Chart.yaml"
+          values_file = chart_dir / "values.yaml"
+          image_tag = os.environ["IMAGE_TAG"]
+          with chart_file.open() as fh:
+              chart_data = yaml.safe_load(fh) or {}
+          version = str(chart_data.get("version", "0.0.0"))
+          new_version = bump_version(version)
+          chart_data["version"] = new_version
+          chart_data["appVersion"] = image_tag.lstrip("v")
+          with chart_file.open("w") as fh:
+              yaml.safe_dump(chart_data, fh, sort_keys=False)
 
-with values_file.open() as fh:
-    values_data = yaml.safe_load(fh) or {}
-image_section = values_data.get("image", {})
-image_section["tag"] = image_tag
-values_data["image"] = image_section
-with values_file.open("w") as fh:
-    yaml.safe_dump(values_data, fh, sort_keys=False)
+          with values_file.open() as fh:
+              values_data = yaml.safe_load(fh) or {}
+          image_section = values_data.get("image", {})
+          image_section["tag"] = image_tag
+          values_data["image"] = image_section
+          with values_file.open("w") as fh:
+              yaml.safe_dump(values_data, fh, sort_keys=False)
 
-with open(os.environ["GITHUB_OUTPUT"], "a") as fh:
-    fh.write(f"chart_version={new_version}\n")
-PY
+          with open(os.environ["GITHUB_OUTPUT"], "a") as fh:
+              fh.write(f"chart_version={new_version}\n")
+          PY
 
       - name: Package chart
         run: |
