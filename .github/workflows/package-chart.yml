@@ -1,0 +1,121 @@
+name: Package Helm Chart
+
+on:
+  repository_dispatch:
+    types:
+      - package-chart
+  workflow_dispatch:
+    inputs:
+      chart:
+        description: 'Chart directory (relative path) to package'
+        required: true
+        default: 'fhg-backend-chart'
+      imageTag:
+        description: 'Image tag to embed in the chart values'
+        required: true
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.17.0
+
+      - name: Determine inputs
+        id: inputs
+        run: |
+          chart="${{ github.event.client_payload.chart || github.event.inputs.chart || 'fhg-backend-chart' }}"
+          image_tag="${{ github.event.client_payload.imageTag || github.event.inputs.imageTag || 'v0.0.1' }}"
+          chart="${chart#./}"
+          chart="${chart%/}"
+          if [[ "$image_tag" != v* ]]; then
+            image_tag="v${image_tag}"
+          fi
+          chart_name=$(basename "$chart")
+          echo "chart_dir=$chart" >> "$GITHUB_OUTPUT"
+          echo "chart_name=$chart_name" >> "$GITHUB_OUTPUT"
+          echo "image_tag=$image_tag" >> "$GITHUB_OUTPUT"
+
+      - name: Update chart metadata
+        id: update-chart
+        env:
+          CHART_DIR: ${{ steps.inputs.outputs.chart_dir }}
+          IMAGE_TAG: ${{ steps.inputs.outputs.image_tag }}
+        run: |
+          pip install pyyaml
+          python - <<'PY'
+import os
+from pathlib import Path
+
+import yaml
+
+def bump_version(version: str) -> str:
+    parts = [int(p) for p in version.split(".")]
+    while len(parts) < 3:
+        parts.append(0)
+    major, minor, patch = parts[:3]
+    patch += 1
+    if patch > 99:
+        patch = 0
+        minor += 1
+        if minor > 99:
+            minor = 0
+            major += 1
+    return f"{major}.{minor}.{patch}"
+
+chart_dir = Path(os.environ["CHART_DIR"])
+chart_file = chart_dir / "Chart.yaml"
+values_file = chart_dir / "values.yaml"
+image_tag = os.environ["IMAGE_TAG"]
+with chart_file.open() as fh:
+    chart_data = yaml.safe_load(fh) or {}
+version = str(chart_data.get("version", "0.0.0"))
+new_version = bump_version(version)
+chart_data["version"] = new_version
+chart_data["appVersion"] = image_tag.lstrip("v")
+with chart_file.open("w") as fh:
+    yaml.safe_dump(chart_data, fh, sort_keys=False)
+
+with values_file.open() as fh:
+    values_data = yaml.safe_load(fh) or {}
+image_section = values_data.get("image", {})
+image_section["tag"] = image_tag
+values_data["image"] = image_section
+with values_file.open("w") as fh:
+    yaml.safe_dump(values_data, fh, sort_keys=False)
+
+with open(os.environ["GITHUB_OUTPUT"], "a") as fh:
+    fh.write(f"chart_version={new_version}\n")
+PY
+
+      - name: Package chart
+        run: |
+          mkdir -p packages
+          helm package "${{ steps.inputs.outputs.chart_dir }}" --destination packages
+        env:
+          chart_dir: ${{ steps.inputs.outputs.chart_dir }}
+
+      - name: Commit packaged chart
+        env:
+          CHART_DIR: ${{ steps.inputs.outputs.chart_dir }}
+          CHART_NAME: ${{ steps.inputs.outputs.chart_name }}
+          CHART_VERSION: ${{ steps.update-chart.outputs.chart_version }}
+          IMAGE_TAG: ${{ steps.inputs.outputs.image_tag }}
+        run: |
+          package_file="packages/${CHART_NAME}-${CHART_VERSION}.tgz"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "${CHART_DIR}/Chart.yaml" "${CHART_DIR}/values.yaml" "$package_file"
+          if git diff --cached --quiet; then
+            echo "No changes detected; skipping commit."
+            exit 0
+          fi
+          git commit -m "chore: package ${CHART_NAME} ${CHART_VERSION} (${IMAGE_TAG})"
+          git push
