@@ -1,6 +1,9 @@
 name: Package Helm Chart
 
 on:
+  push:
+    branches:
+      - main
   repository_dispatch:
     types:
       - package-chart
@@ -14,9 +17,16 @@ on:
         description: 'Image tag to embed in the chart values'
         required: true
 
+permissions:
+  contents: write
+  packages: write
+
 jobs:
   package:
+    if: github.event_name != 'push' || github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
+    env:
+      OCI_REPOSITORY: oci://ghcr.io/${{ github.repository_owner }}/fhg-backend-chart
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -39,9 +49,29 @@ jobs:
             image_tag="v${image_tag}"
           fi
           chart_name=$(basename "$chart")
+          source_repo="${{ github.event.client_payload.sourceRepo || github.repository }}"
+          source_branch="${{ github.event.client_payload.sourceBranch || github.ref_name }}"
+          source_commit="${{ github.event.client_payload.sourceCommit || github.sha }}"
+          commit_message="${{ github.event.client_payload.commitMessage || github.event.head_commit.message || '' }}"
+          source_actor="${{ github.event.client_payload.sourceActor || github.actor }}"
+          source_run_url="${{ github.event.client_payload.sourceRunUrl || '' }}"
           echo "chart_dir=$chart" >> "$GITHUB_OUTPUT"
           echo "chart_name=$chart_name" >> "$GITHUB_OUTPUT"
           echo "image_tag=$image_tag" >> "$GITHUB_OUTPUT"
+          echo "source_repo=$source_repo" >> "$GITHUB_OUTPUT"
+          echo "source_branch=$source_branch" >> "$GITHUB_OUTPUT"
+          echo "source_commit=$source_commit" >> "$GITHUB_OUTPUT"
+          echo "commit_message=$commit_message" >> "$GITHUB_OUTPUT"
+          echo "source_actor=$source_actor" >> "$GITHUB_OUTPUT"
+          echo "source_run_url=$source_run_url" >> "$GITHUB_OUTPUT"
+
+      - name: Log trigger metadata
+        run: |
+          echo "Packaging ${{ steps.inputs.outputs.chart_name }} triggered by ${{ steps.inputs.outputs.source_actor }} for ${{ steps.inputs.outputs.source_repo }}@${{ steps.inputs.outputs.source_branch }}"
+          echo "Commit ${{ steps.inputs.outputs.source_commit }} (${{ steps.inputs.outputs.commit_message }})"
+          if [[ -n "${{ steps.inputs.outputs.source_run_url }}" ]]; then
+            echo "Original run URL: ${{ steps.inputs.outputs.source_run_url }}"
+          fi
 
       - name: Update chart metadata
         id: update-chart
@@ -96,9 +126,12 @@ jobs:
           PY
 
       - name: Package chart
+        id: package
         run: |
           mkdir -p packages
           helm package "${{ steps.inputs.outputs.chart_dir }}" --destination packages
+          package_file="packages/${{ steps.inputs.outputs.chart_name }}-${{ steps.update-chart.outputs.chart_version }}.tgz"
+          echo "package-path=${package_file}" >> "$GITHUB_OUTPUT"
         env:
           chart_dir: ${{ steps.inputs.outputs.chart_dir }}
 
@@ -112,17 +145,31 @@ jobs:
           ls -l packages
           cat index.yaml
 
+      - name: Authenticate Helm registry
+        env:
+          HELM_EXPERIMENTAL_OCI: 1
+        run: |
+          printf '%s' "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      - name: Push chart to OCI registry
+        env:
+          HELM_EXPERIMENTAL_OCI: 1
+        run: |
+          package="${{ steps.package.outputs.package-path }}"
+          echo "Pushing chart ${package} to ${OCI_REPOSITORY}"
+          helm push "${package}" "${OCI_REPOSITORY}"
+
       - name: Commit packaged chart
         env:
           CHART_DIR: ${{ steps.inputs.outputs.chart_dir }}
           CHART_NAME: ${{ steps.inputs.outputs.chart_name }}
           CHART_VERSION: ${{ steps.update-chart.outputs.chart_version }}
           IMAGE_TAG: ${{ steps.inputs.outputs.image_tag }}
+          PACKAGE_FILE: ${{ steps.package.outputs.package-path }}
         run: |
-          package_file="packages/${CHART_NAME}-${CHART_VERSION}.tgz"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add "${CHART_DIR}/Chart.yaml" "${CHART_DIR}/values.yaml" "$package_file" index.yaml
+          git add "${CHART_DIR}/Chart.yaml" "${CHART_DIR}/values.yaml" "${PACKAGE_FILE}" index.yaml
           if git diff --cached --quiet; then
             echo "No changes detected; skipping commit."
             exit 0
