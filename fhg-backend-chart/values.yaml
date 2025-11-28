@@ -1,4 +1,4 @@
 replicaCount: 1
 image:
   repository: ghcr.io/liuyenhui/fhg-backend
-  tag: v0.0.20
+  tag: v0.0.21
