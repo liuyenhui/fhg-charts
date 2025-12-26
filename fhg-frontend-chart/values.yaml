@@ -1,4 +1,5 @@
 replicaCount: 1
 image:
-  repository: ghcr.io/example/fhg-frontend
+  repository: ghcr.io/liuyenhui/fhg-frontend
   tag: latest
+  
