@@ -1,6 +1,6 @@
 apiVersion: v2
 name: fhg-backend-chart
-version: 0.1.12
+version: 0.1.13
 appVersion: 0.0.1
 description: Helm chart for the fhg backend service.
 type: application
