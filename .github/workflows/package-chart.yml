@@ -25,8 +25,6 @@ jobs:
   package:
     if: github.event_name != 'push' || github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
-    env:
-      OCI_REPOSITORY: oci://ghcr.io/${{ github.repository_owner }}/fhg-backend-chart
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -156,8 +154,10 @@ jobs:
           HELM_EXPERIMENTAL_OCI: 1
         run: |
           package="${{ steps.package.outputs.package-path }}"
-          echo "Pushing chart ${package} to ${OCI_REPOSITORY}"
-          helm push "${package}" "${OCI_REPOSITORY}"
+          chart_name="${{ steps.inputs.outputs.chart_name }}"
+          oci_repo="oci://ghcr.io/${{ github.repository_owner }}/${chart_name}"
+          echo "Pushing chart ${package} to ${oci_repo}"
+          helm push "${package}" "${oci_repo}"
 
       - name: Commit packaged chart
         env:
