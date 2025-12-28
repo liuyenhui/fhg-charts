@@ -3,7 +3,17 @@ entries:
   fhg-backend-chart:
   - apiVersion: v2
     appVersion: 0.0.1
-    created: "2025-12-26T09:59:05.598830807Z"
+    created: "2025-12-28T05:37:20.756055658Z"
+    description: Helm chart for the fhg backend service.
+    digest: 66a5e3963a93d34e84da6e0c78f576da91dd1c49598f57889a2b5f7f5ff49e88
+    name: fhg-backend-chart
+    type: application
+    urls:
+    - https://raw.githubusercontent.com/liuyenhui/fhg-charts/main/packages/fhg-backend-chart-0.1.14.tgz
+    version: 0.1.14
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2025-12-28T05:37:20.75590679Z"
     description: Helm chart for the fhg backend service.
     digest: dd710f1bfd90e267975e20c00cd39e1cb41dc9d53eb0759b22bcb57ff20ad7ab
     name: fhg-backend-chart
@@ -13,7 +23,7 @@ entries:
     version: 0.1.13
   - apiVersion: v2
     appVersion: 0.0.1
-    created: "2025-12-26T09:59:05.598619778Z"
+    created: "2025-12-28T05:37:20.755749347Z"
     description: Helm chart for the fhg backend service.
     digest: 286d518f51602d2815164e5e68b67c510c505d01e47d5d051cfecc90480ec4d7
     name: fhg-backend-chart
@@ -23,7 +33,7 @@ entries:
     version: 0.1.12
   - apiVersion: v2
     appVersion: 0.0.21
-    created: "2025-12-26T09:59:05.598492187Z"
+    created: "2025-12-28T05:37:20.755612311Z"
     description: Helm chart for the fhg backend service.
     digest: a9997ef71137b45c2500372e929770d37f180f82dfda7dfe9751e0f3197b88b3
     name: fhg-backend-chart
@@ -33,7 +43,7 @@ entries:
     version: 0.1.11
   - apiVersion: v2
     appVersion: 0.0.20
-    created: "2025-12-26T09:59:05.598361259Z"
+    created: "2025-12-28T05:37:20.755468503Z"
     description: Helm chart for the fhg backend service.
     digest: 96512f4a1c56b12dac52b9ca8415a2d845707a705c361936ec67fbc95781b9df
     name: fhg-backend-chart
@@ -43,7 +53,7 @@ entries:
     version: 0.1.10
   - apiVersion: v2
     appVersion: 0.0.19
-    created: "2025-12-26T09:59:05.599986241Z"
+    created: "2025-12-28T05:37:20.758067284Z"
     description: Helm chart for the fhg backend service.
     digest: 21a77e206905e4c4b5d9d2fb48e573d74fbd5052acb7771c5619dd3a87f1e605
     name: fhg-backend-chart
@@ -53,7 +63,7 @@ entries:
     version: 0.1.9
   - apiVersion: v2
     appVersion: 0.0.1
-    created: "2025-12-26T09:59:05.59985348Z"
+    created: "2025-12-28T05:37:20.757919208Z"
     description: Helm chart for the fhg backend service.
     digest: 3a984bdd387063c9b7eb068cc0762e8da1d7ed0e03147a2e3f03ad0346fbd795
     name: fhg-backend-chart
@@ -63,7 +73,7 @@ entries:
     version: 0.1.8
   - apiVersion: v2
     appVersion: 0.0.18
-    created: "2025-12-26T09:59:05.599693237Z"
+    created: "2025-12-28T05:37:20.757800046Z"
     description: Helm chart for the fhg backend service.
     digest: 4341c3848195f8be20b2d58c727b8216f0fa4017a0e6134ea82262f03d6c324e
     name: fhg-backend-chart
@@ -73,7 +83,7 @@ entries:
     version: 0.1.7
   - apiVersion: v2
     appVersion: 0.0.17
-    created: "2025-12-26T09:59:05.599566207Z"
+    created: "2025-12-28T05:37:20.757672809Z"
     description: Helm chart for the fhg backend service.
     digest: 3ab656d774ace44697fe304857c425ef6c670ff80d459b81d8a43e4ac3b095ff
     name: fhg-backend-chart
@@ -83,7 +93,7 @@ entries:
     version: 0.1.6
   - apiVersion: v2
     appVersion: 0.0.16
-    created: "2025-12-26T09:59:05.599433556Z"
+    created: "2025-12-28T05:37:20.757450244Z"
     description: Helm chart for the fhg backend service.
     digest: 71a72c10089cd3590f3876df51185e1ae1b27c9ae6b056ef842ffbece75de4bf
     name: fhg-backend-chart
@@ -93,7 +103,7 @@ entries:
     version: 0.1.5
   - apiVersion: v2
     appVersion: 0.0.15
-    created: "2025-12-26T09:59:05.599294704Z"
+    created: "2025-12-28T05:37:20.757061864Z"
     description: Helm chart for the fhg backend service.
     digest: 574e747a79663b4b57c854117d05028cfac6e8dd4fd9baa78022423b8e1400d0
     name: fhg-backend-chart
@@ -103,7 +113,7 @@ entries:
     version: 0.1.4
   - apiVersion: v2
     appVersion: 0.0.14
-    created: "2025-12-26T09:59:05.599145131Z"
+    created: "2025-12-28T05:37:20.756827046Z"
     description: Helm chart for the fhg backend service.
     digest: ff70f1d808ddd2c8b8aa1c94b776e57a8ccfc48cef46f93c673b860a35d52ed1
     name: fhg-backend-chart
@@ -113,7 +123,7 @@ entries:
     version: 0.1.3
   - apiVersion: v2
     appVersion: 0.0.13
-    created: "2025-12-26T09:59:05.599011198Z"
+    created: "2025-12-28T05:37:20.756369303Z"
     description: Helm chart for the fhg backend service.
     digest: ba2cf9ec34681d52fd9c30e512ec43fe9589d138ed5a889dd2e9cc81d1582173
     name: fhg-backend-chart
@@ -123,7 +133,7 @@ entries:
     version: 0.1.2
   - apiVersion: v2
     appVersion: 0.0.12
-    created: "2025-12-26T09:59:05.598208761Z"
+    created: "2025-12-28T05:37:20.755333331Z"
     description: Helm chart for the fhg backend service.
     digest: 139ab44b8f5fb341b81bf48fc239ec441f031965fc7135da63a46e6cb4a4e068
     name: fhg-backend-chart
@@ -131,4 +141,4 @@ entries:
     urls:
     - https://raw.githubusercontent.com/liuyenhui/fhg-charts/main/packages/fhg-backend-chart-0.1.1.tgz
     version: 0.1.1
-generated: "2025-12-26T09:59:05.597925375Z"
+generated: "2025-12-28T05:37:20.755063588Z"
